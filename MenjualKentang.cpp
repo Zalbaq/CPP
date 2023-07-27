@@ -8,58 +8,49 @@
 #define sum accumulate
 #define pb push_back
 #define pob pop_back
+#define ll long long
 using namespace std;
 
 int main() {
-    int N, M, ans = 0, maxWeight;
-    double avgA, avgB;
-
+    int N, M;
     cin >> N >> M;
+
     vi A, B;
+    ll int ans = 0, totA = 0, totB = 0;
 
     loopI(N) {
         int temp;
         cin >> temp;
         A.pb(temp);
+        totA += temp;
     }
+    totA = sum(A.begin(), A.end(), 0LL);
 
     loopI(M) {
         int temp;
         cin >> temp;
         B.pb(temp);
+        totB += temp;
     }
+    totB = sum(B.begin(), B.end(), 0LL);
+
     sort(B.begin(), B.end());
 
-    avgA = static_cast<double>(sum(A.begin(), A.end(), 0)) / A.size();
-    avgB = static_cast<double>(sum(B.begin(), B.end(), 0)) / B.size();
-
-    if (avgA > avgB)
+    while ((double)totA / N <= (double)totB / M && B.size() > 0)
     {
-        ans = -1;
-    }
-    else {
-        while (avgA <= avgB && B.size() > 1)
+        int tmp = B[B.size() - 1];
+        while (B[B.size() - 1] == tmp)
         {
-            maxWeight = *max_element(B.begin(), B.end());
-            A.pb(maxWeight);
             B.pob();
-            ans += maxWeight;
-
-            while (maxWeight == B.back() && B.size() > 1)
-            {
-                maxWeight = B.back();
-                A.pb(maxWeight);
-                B.pob();
-                ans += maxWeight;
-            }
-
-            avgA = static_cast<double>(sum(A.begin(), A.end(), 0)) / A.size();
-            avgB = static_cast<double>(sum(B.begin(), B.end(), 0)) / B.size();
+            ans += tmp;
+            totA += tmp;
+            totB -= tmp;
+            N++;M--;
         }
-
     }
 
-    cout << ans << endl;
-
+    if (B.size() == 0) cout << -1 << endl;
+    else cout << ans << endl;
     return 0;
 }
+
